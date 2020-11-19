@@ -1,0 +1,40 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
+        script(src="http://code.jquery.com/jquery-latest.min.js")
+        script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
+
+    
+    body
+        table(class="table table-striped")
+            thead
+                tr
+                    th 번호
+                    th 제목
+                    th 작성자
+                    th 날짜
+            tbody
+                -for(var i=0;i<5;i++)
+                    -if(id[i]=='D')
+                        tr(style="background-color:pink" onclick=`location.href='/main/${id[i]}'`)
+                            td= id[i]
+                            td= title[i]
+                            th= name[i]
+                            th= date[i]
+                    -else
+                        tr(onclick=`location.href='/main/${id[i]}'`)
+                            td= id[i]
+                            td= title[i]
+                            th= name[i]
+                            th= date[i]
+        hr
+        div(align="right")      
+            a(class="btn btn-outline-dark" href="/create") 글쓰기
+        nav(aria-label="Page navigation example")
+            ul(class="pagination justify-content-center")
+                -for(var i=0; i<page_num; i++)
+                    a(class="page-link" href=`/page/${i+1}`)
+                        li(class="page-item")= i+1

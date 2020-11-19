@@ -1,0 +1,36 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous')
+        link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css' integrity='sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS' crossorigin='anonymous')
+        title info
+
+    style.
+        body {
+        padding-top: 70px;
+        padding-bottom: 30px;
+        }
+        #btn1{
+            float:right;
+        }
+
+    body
+    
+        article
+            .container(role='main')
+                h2 삭제하시겠습니까?
+                    form#form(name='form' role='form' method='post' action='/delete/'+`${id}`)
+                        input(type="hidden" name="id" value=id)
+                        .mb-3
+                            label(for='title') 제목
+                            input#title.form-control(type='text' readOnly name='title' value=title)
+                        .mb-3
+                            label(for='reg_id') 작성자
+                            input#reg_id.form-control(type='text' readOnly name='name' value=name)
+                        .mb-3
+                            label(for='content') 내용
+                            textarea#content.form-control(rows='5' readOnly disabled name='text')= text
+                        div
+                            button#btnSave.btn.btn-sm.btn-primary(type='submit' formmethod="post") 삭제
+                            button#btnList.btn.btn-sm.btn-primary(type="button" onclick="location.href='/1'") 목록
