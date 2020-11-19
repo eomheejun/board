@@ -269,5 +269,12 @@ router.post('/delete/:id' , (req, res) => {
         })
 });
 
+//search
 
+router.post('/search', (req, res) => {
+    const search = req.body.search;
+    const text = req.body.text;
+    boardmodel
+    console.log(search,text)
+})
 module.exports = router;
