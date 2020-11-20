@@ -1,5 +1,5 @@
 const express = require('express');
-const { create } = require('../../models/board');
+const { create, db } = require('../../models/board');
 const board = require('../../models/board');
 const router = express.Router();
 const boardmodel = require("../../models/board");
@@ -10,33 +10,19 @@ router.get('/', (req,res)=>{
         if(err){
             console.log("error")
         }else{
-            let id_list = [];
-            let title_list = [];
-            let name_list = [];
-            let text_list = [];
-            let date_list =[];
             let page_num = parseInt(board.length/5);
             if(board.length>= 5 && board.length%5== 0){
                 page_num = page_num
             }else{
                 page_num = page_num +1
             }
-
-
-            for(let i=(board.length-5);i<board.length;i++)
-            {
-                id_list.push(board[i].id)
-                title_list.push(board[i].title)
-                name_list.push(board[i].name)
-                text_list.push(board[i].text)
-                date_list.push(board[i].createTime)
+            let start;
+            if(board.length-5<0){
+                start = 0
+            }else{
+                start = board.length-5
             }
-
-            res.render('main', {id:id_list.reverse(),title:title_list.reverse(), 
-                name:name_list.reverse(), text:text_list.reverse(),
-                date:date_list.reverse(),
-                page_num:page_num
-            })
+            res.render('main', {board:board.slice(start,board.length).reverse(),page_num:page_num})
         }
     })
 })
@@ -48,31 +34,19 @@ router.get('/page/:num', (req,res)=>{
             if(err){
                 console.log("error")
             }else{
-                let id_list = [];
-                let title_list = [];
-                let name_list = [];
-                let text_list = [];
-                let date_list =[];
                 let page_num = parseInt(board.length/5);
                 if(board.length>= 5 && board.length%5== 0){
                     page_num = page_num
                 }else{
                     page_num = page_num +1
                 }
-                for(let i=(board.length-5);i<board.length;i++)
-                {
-                    id_list.push(board[i].id)
-                    title_list.push(board[i].title)
-                    name_list.push(board[i].name)
-                    text_list.push(board[i].text)
-                    date_list.push(board[i].createTime)
+                let start;
+                if(board.length-5<0){
+                    start = 0
+                }else{
+                    start = board.length-5
                 }
-    
-                res.render('main', {id:id_list.reverse(),title:title_list.reverse(), 
-                    name:name_list.reverse(), text:text_list.reverse(),
-                    date:date_list.reverse(),
-                    page_num:page_num
-                })
+                res.render('main', {board:board.slice(start,board.length).reverse(),page_num:page_num})
             }
         })
     }else{
@@ -80,11 +54,7 @@ router.get('/page/:num', (req,res)=>{
             if(err){
                 console.log("error")
             }else{
-                let id_list = [];
-                let title_list = [];
-                let name_list = [];
-                let text_list = [];
-                let date_list =[];
+
                 let page_num = parseInt(board.length/5);
                 if(board.length>= 5 && board.length%5== 0){
                     page_num = page_num
@@ -96,19 +66,8 @@ router.get('/page/:num', (req,res)=>{
                 if(start<0){
                     start=0                    
                 }
-                for(let i=start ;i<end;i++)
-                {
-                    id_list.push(board[i].id)
-                    title_list.push(board[i].title)
-                    name_list.push(board[i].name)
-                    text_list.push(board[i].text)
-                    date_list.push(board[i].createTime)
-                }
-                res.render('main', {id:id_list.reverse(),title:title_list.reverse(), 
-                    name:name_list.reverse(), text:text_list.reverse(),
-                    date:date_list.reverse(),
-                    page_num:page_num
-                })
+                res.render('main', {board:board.slice(start,end).reverse()
+                ,page_num:page_num})
             }
         })
     }
@@ -192,13 +151,7 @@ router.get('/main/:id', (req, res) => {
                 `
                 );
             }else{
-
-                let title=board.title;
-                let name=board.name;
-                let text=board.text;
-                let date=board.createTime;
-                let id=board.id;
-                res.render('board',{id:id,text:text, title:title,name:name,date:date})
+                res.render('board',{board:board})
             }
 
         })
@@ -210,7 +163,7 @@ router.get('/update/:id' ,(req, res)=>{
         .findOne({id:req.params.id})
         .then(board => {
             console.log(board)
-            res.render("update", {id:board.id,title:board.title,name:board.name,text:board.text})
+            res.render("update", {board:board})
         })
         .catch(err=>res.json(err));
 })
@@ -223,7 +176,7 @@ router.post('/update/:id' , (req, res) => {
             title:req.body.title,
             name:req.body.name,
             text:req.body.text,
-            createTime:date
+            updateTime:date
         }})
         .exec()
         .then(result => {
@@ -242,8 +195,7 @@ router.get('/delete/:id' , (req, res) => {
     boardmodel
         .findOne({id:req.params.id})
         .then(board => {
-            console.log(board)
-            res.render("delete", {id:board.id,title:board.title,name:board.name,text:board.text})
+            res.render("delete", {board:board})
         })
         .catch(err=>res.json(err));
 });
@@ -255,7 +207,7 @@ router.post('/delete/:id' , (req, res) => {
     boardmodel
         .updateMany({id:id}, {$set:{
             id:del,
-            createTime:date
+            deleteTime:date
         }})
         .exec()
         .then(result => {
@@ -269,12 +221,48 @@ router.post('/delete/:id' , (req, res) => {
         })
 });
 
-//search
+//search 
+//find에 조건을 걸어서 만족하는 board만 뽑음
 
 router.post('/search', (req, res) => {
     const search = req.body.search;
     const text = req.body.text;
-    boardmodel
-    console.log(search,text)
+    if(search=="name" && text){
+        boardmodel.find({"name":{ $regex: text }},function(err,board){
+            if(err){
+                console.log("error")
+            }else{
+                res.render('search', {board:board.reverse()})            
+            }
+        })
+    }else if(search=="title" && text ){
+        boardmodel.find({"title":{ $regex: text }},function(err,board){
+            if(err){
+                console.log("error")
+            }else{
+  
+
+    
+                res.render('search', {board:board.reverse()})            
+            }
+        })        
+    }else if(!text && search == "--선택--"){
+        res.redirect('/')
+    }else{
+        res.send(`
+        <script>
+        var contest = alert("검색어를 입력해주세요.")
+        if(contest === true){
+            history.back();
+        }
+        else{
+            history.back();
+        }
+        </script>
+        `
+        );    
+    }
 })
+
+
 module.exports = router;

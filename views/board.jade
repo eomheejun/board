@@ -15,17 +15,20 @@ html
                     th 날짜
             tbody
                 tr
-                    td= title
-                    th= name
-                    th= date
+                    td= board.title
+                    th= board.name
+                    -if(board.updateTime)
+                                th= board.updateTime
+                            -else
+                                th= board.createTime
 
         table(class="table table-striped")
             thead
                 tr
                     th 본문
-                td= text
+                td= board.text
         hr
         div(align="right")      
-            a(class="btn btn-outline-dark" href="/delete/"+`${id}`) 삭제
+            a(class="btn btn-outline-dark" href="/delete/"+`${board.id}`) 삭제
             a(class="btn btn-outline-dark" href="/") 뒤로가기
-            a(class="btn btn-outline-dark" href="/update/"+`${id}`) 수정하기
+            a(class="btn btn-outline-dark" href="/update/"+`${board.id}`) 수정하기

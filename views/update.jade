@@ -18,17 +18,17 @@ html
         article
             .container(role='main')
                 h2 update Form
-                    form#form(name='form' role='form' method='post' action='/update/'+`${id}`)
-                        input(type="hidden" name="id" value=id)
+                    form#form(name='form' role='form' method='post' action='/update/'+`${board.id}`)
+                        input(type="hidden" name="id" value=board.id)
                         .mb-3
                             label(for='title') 제목
-                            input#title.form-control(type='text' readOnly name='title' value=title)
+                            input#title.form-control(type='text' name='title' value=board.title)
                         .mb-3
                             label(for='reg_id') 작성자
-                            input#reg_id.form-control(type='text' readOnly name='name' value=name)
+                            input#reg_id.form-control(type='text' readOnly name='name' value=board.name)
                         .mb-3
                             label(for='content') 내용
-                            textarea#content.form-control(rows='5' name='text')= text
+                            textarea#content.form-control(rows='5' name='text')= board.text
                         div
                             button#btnSave.btn.btn-sm.btn-primary(type='submit' formmethod="post") 저장
                             button#btnList.btn.btn-sm.btn-primary(type="button" onclick="location.href='/1'") 목록

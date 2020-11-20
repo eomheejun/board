@@ -24,7 +24,6 @@ html
                             td= board[i].title
                             th= board[i].name
                             th= board[i].deleteTime
-
                     -else
                         tr(onclick=`location.href='/main/${board[i].id}'`)
                             td= board[i].id
@@ -34,7 +33,7 @@ html
                                 th= board[i].updateTime
                             -else
                                 th= board[i].createTime
-        hr 
+        hr
         div(align="right")
             form(action="/search" method="post")
                 select(id="box" name="search")
@@ -45,8 +44,3 @@ html
                     button#btnSave.btn.btn-sm.btn-primary(type="submit")  검색
     
                 a(class="btn btn-outline-dark" href="/create") 글쓰기
-        nav(aria-label="Page navigation example")
-            ul(class="pagination justify-content-center")
-                -for(var i=0; i<page_num; i++)
-                    a(class="page-link" href=`/page/${i+1}`)
-                        li(class="page-item")= i+1

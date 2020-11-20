@@ -20,6 +20,12 @@ const SiteSchema = new Schema({
     },
     createTime:{
         type: String
+    },
+    updateTime:{
+        type:String
+    },
+    deleteTime:{
+        type:String
     }
 });
 
