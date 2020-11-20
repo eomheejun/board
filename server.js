@@ -16,6 +16,7 @@ app.set('views','./views');
 
 const db = require("./config/keys").mongoURI;
 
+//몽고디비연결
 mongoose
     .connect(db, {
         useNewUrlParser: true,

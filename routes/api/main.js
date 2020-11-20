@@ -4,7 +4,7 @@ const board = require('../../models/board');
 const router = express.Router();
 const boardmodel = require("../../models/board");
 
-//main
+//main페이지
 router.get('/', (req,res)=>{
     boardmodel.find(function(err,board){
         if(err){
@@ -132,7 +132,7 @@ router.post('/create', (req,res)=> {
         })
         .catch(err=>res.json(err));
 });
-//read
+//read 
 router.get('/main/:id', (req, res) => {
     boardmodel
         .findOne({id:req.params.id})

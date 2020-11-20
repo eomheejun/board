@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+//스키마
+
 const SiteSchema = new Schema({
     id:{
         type:String,
