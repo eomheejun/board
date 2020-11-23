@@ -17,22 +17,23 @@ html
                     th 작성자
                     th 날짜
             tbody
-                -for(var i=0;i<board.length;i++)
-                    -if(board[i].id=='D')
-                        tr(style="background-color:pink" onclick=`location.href='/main/${board[i].id}'`)
-                            td= board[i].id
-                            td= board[i].title
-                            th= board[i].name
-                            th= board[i].deleteTime
-                    -else
-                        tr(onclick=`location.href='/main/${board[i].id}'`)
-                            td= board[i].id
-                            td= board[i].title
-                            th= board[i].name
-                            -if(board[i].updateTime)
-                                th= board[i].updateTime
+                mixin board(board)
+                    each data in board
+                        -if(data.id =='D')
+                            -var tmp_color ='pink'
+                            -var tmp_time= data.deleteTime
+                        -else
+                            -var tmp_color = "none"
+                            -if(data.updateTime)
+                                -var tmp_time= data.updateTime
                             -else
-                                th= board[i].createTime
+                                -var tmp_time= data.createTime
+                        tr(style=`background-color:${tmp_color}` onclick=`location.href='/main/${data.id}'`)
+                            td= data.id
+                            td= data.title
+                            th= data.name
+                            th #{tmp_time}
+                +board(board)
         hr
         div(align="right")
             form(action="/search" method="post")
